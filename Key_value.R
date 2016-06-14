@@ -15,10 +15,6 @@ Unaccent <- function(text) {
 get_desc <- function(url_df){
   result = data.frame()
   
-  'span.property' -> css_key
-  'span.value' -> css_value
-  
-  
   xpath_value = '//*[contains(concat( " ", @class, " " ), concat( " ", "value", " " ))]'
   xpath_property = '//*[contains(concat( " ", @class, " " ), concat( " ", "property", " " ))]'
   xpath_title = '//*[contains(concat( " ", @class, " " ), concat( " ", "no-border", " " ))]'
@@ -31,12 +27,12 @@ get_desc <- function(url_df){
     
     exc <- try(read_html(url))
     
-    if (class(exc) != "try-error"){
+    if (class(exc[1]) != "try-error"){
       url %>%
         read_html() %>%
         html_nodes(xpath = xpath_property)%>%
         html_text()%>%
-        repair_encoding('utf-8')%>%
+        repair_encoding('UTF-8')%>%
         (function(x)gsub("[^[:alnum:][:space:]']", "", x)) %>%
         Unaccent()%>%
         trimws()-> property
@@ -110,7 +106,7 @@ extract_LBC = function(nb_page){
     
     res <- try(read_html(url_lbc))
     
-    if (class(res) != "try-error"){
+    if (class(res[1]) != "try-error"){
       url_lbc %>%
         read_html() %>%
         html_nodes(css_page)%>%
@@ -149,18 +145,3 @@ parse_df <- function(df){
   return(df)
 }
 
-
-rawdf = extract_LBC(1)
-
-rawdf
-get_desc(rawdf)
-
-head(rawdf)
-dim(rawdf)
-
-df = parse_df(rawdf)
-
-summary(df)
-head(df)
-
-write.csv(df, 'LBC_cars_200.csv')
