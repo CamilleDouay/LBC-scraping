@@ -29,7 +29,8 @@ get_desc <- function(url_df){
     
     if (class(exc[1]) != "try-error"){
       url %>%
-        read_html() %>%
+        read_html() -> url_page
+      url_page%>%
         html_nodes(xpath = xpath_property)%>%
         html_text()%>%
         repair_encoding('UTF-8')%>%
@@ -38,8 +39,7 @@ get_desc <- function(url_df){
         trimws()-> property
 
 
-      url %>%
-        read_html() %>%
+      url_page%>%
         html_nodes(xpath = xpath_value)%>%
         html_text()%>%
         repair_encoding('utf-8')%>%
@@ -48,23 +48,20 @@ get_desc <- function(url_df){
         data.frame()-> value
       
       
-      url %>%
-        read_html() %>%
+      url_page%>%
         html_nodes(xpath = xpath_title)%>%
         html_text()%>%
         repair_encoding('utf-8')%>%
         trimws()-> titre
       
       
-      url %>%
-        read_html() %>%
+      url_page%>%
         html_nodes(xpath = xpath_photos)%>%
         html_text()%>%
         repair_encoding('utf-8')%>%
         trimws()-> photos
       
-      url %>%
-        read_html() %>%
+      url_page%>%
         html_nodes(xpath = xpath_MEL)%>%
         html_text()%>%
         repair_encoding('utf-8')%>%
