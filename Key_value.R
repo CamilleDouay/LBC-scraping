@@ -37,16 +37,15 @@ get_desc <- function(url_df){
         (function(x)gsub("[^[:alnum:][:space:]']", "", x)) %>%
         Unaccent()%>%
         trimws()-> property
-
+      
 
       url_page%>%
         html_nodes(xpath = xpath_value)%>%
-        html_text()%>%
+        (function(x){gsub(pattern = '<.*?>', replacement = ' ', x)}) %>%  
         repair_encoding('utf-8')%>%
         trimws()%>% 
         t()%>% 
         data.frame()-> value
-      
       
       url_page%>%
         html_nodes(xpath = xpath_title)%>%
@@ -135,8 +134,8 @@ parse_df <- function(df){
   ### Retrait des prix trop faibles (<100 €)
   df = df[df$Prix>100,]
   
-  df$Kilométrage = lapply(df$Kilométrage, function(x) gsub(' |KM', '',x))
-  df$Kilométrage = as.numeric(df$Kilométrage)
+  df$Kilometrage = lapply(df$Kilometrage, function(x) gsub(' |KM', '',x))
+  df$Kilometrage = as.numeric(df$Kilometrage)
   
   df$Annee = as.numeric(as.character(df$Annee))
   return(df)
